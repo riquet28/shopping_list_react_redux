@@ -1,14 +1,30 @@
 import React from 'react';
 
+import Form from './Form';
+import ItemList from './ItemList';
+
 class App extends React.Component {
-    render() {
-      return (
-        <div>
-          <h3>Liste de courses</h3>
-          <div>En construction</div>
-        </div>
-      )
-    }
+
+  state = {
+    articles: []
+  }
+
+  addArticle = (article) => {
+    let oldArticles = this.state.articles;
+    article.id = Date.now();
+    let newArticles = [...oldArticles, article];
+    this.setState({ articles: newArticles })
+  }
+
+  render() {
+    return (
+      <div>
+        <h3>Liste de courses</h3>
+        < Form formTitle="Ajouter un article" addArticle={this.addArticle}  />
+        < ItemList articles={this.state.articles}/>
+      </div>
+    )
+  }
 }
 
 export default App;
