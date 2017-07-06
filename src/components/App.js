@@ -2,6 +2,7 @@ import React from 'react';
 
 import Form from './Form';
 import ItemList from './ItemList';
+import { connect } from 'react-redux';
 
 class App extends React.Component {
 
@@ -9,22 +10,47 @@ class App extends React.Component {
     articles: []
   }
 
-  addArticle = (article) => {
-    let oldArticles = this.state.articles;
-    article.id = Date.now();
-    let newArticles = [...oldArticles, article];
-    this.setState({ articles: newArticles })
-  }
-
   render() {
     return (
       <div>
         <h3>Liste de courses</h3>
-        < Form formTitle="Ajouter un article" addArticle={this.addArticle}  />
-        < ItemList articles={this.state.articles}/>
+        < Form formTitle="Ajouter un article" addArticle={this.props.addArticle}  />
+        < ItemList articles={this.props.articles} editArticle={this.props.editArticle} />
       </div>
     )
   }
+} // end class
+
+const addArticleActionCreator = (article) => {
+  return {
+    type: 'ADD_ARTICLE',
+    payload: article
+  }
+};
+
+const editArticleActionCreator = (article) => {
+  return {
+    type: 'EDIT_ARTICLE',
+    payload: article
+  }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    articles: state.articles
+  }
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addArticle: (article) => {
+      dispatch(addArticleActionCreator(article));
+    },
+    editArticle: (article) => {
+      dispatch(editArticleActionCreator(article));
+    }
+  }
+}
+
+// export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(App);
